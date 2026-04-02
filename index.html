@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Primary Meta Tags -->
+  <meta name="title" content="From Blobs to Spokes: High-Fidelity Surface Reconstruction via Oriented Gaussians">
+  <meta name="description" content="Gaussian Wrapping: a principled framework that interprets 3D Gaussians as oriented surface elements, deriving closed-form occupancy and normal fields for high-fidelity, watertight mesh reconstruction of complete 3D scenes including thin structures such as bicycle spokes.">
+  <meta name="keywords" content="3D Gaussian Splatting, Surface Reconstruction, Mesh Extraction, Neural Rendering, Computer Vision">
+  <meta name="author" content="Diego Gomez, Antoine Guédon, Nissim Maruani, Bingchen Gong, Maks Ovsjanikov">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="LIX, École Polytechnique">
+  <meta property="og:title" content="From Blobs to Spokes: High-Fidelity Surface Reconstruction via Oriented Gaussians">
+  <meta property="og:description" content="Gaussian Wrapping: a principled framework that interprets 3D Gaussians as oriented surface elements, deriving closed-form occupancy and normal fields for high-fidelity, watertight mesh reconstruction of complete 3D scenes.">
+  <meta property="og:url" content="https://TODO_DOMAIN.com/gaussian-wrapping">
+  <meta property="og:image" content="https://TODO_DOMAIN.com/static/images/social_preview.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Gaussian Wrapping - Surface Reconstruction via Oriented Gaussians">
+  <meta property="article:published_time" content="2026-01-01T00:00:00.000Z">
+  <meta property="article:author" content="Diego Gomez">
+  <meta property="article:section" content="Research">
+  <meta property="article:tag" content="3D Gaussian Splatting">
+  <meta property="article:tag" content="Surface Reconstruction">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="">
+  <meta name="twitter:creator" content="">
+  <meta name="twitter:title" content="From Blobs to Spokes: High-Fidelity Surface Reconstruction via Oriented Gaussians">
+  <meta name="twitter:description" content="Gaussian Wrapping: principled occupancy + normal fields for 3DGS enabling watertight meshes of complete scenes, including bicycle spokes. State-of-the-art on DTU and Tanks and Temples.">
+  <meta name="twitter:image" content="https://TODO_DOMAIN.com/static/images/social_preview.png">
+  <meta name="twitter:image:alt" content="Gaussian Wrapping - Surface Reconstruction via Oriented Gaussians">
+
+  <!-- Academic/Research Specific -->
+  <meta name="citation_title" content="From Blobs to Spokes: High-Fidelity Surface Reconstruction via Oriented Gaussians">
+  <meta name="citation_author" content="Gomez, Diego">
+  <meta name="citation_author" content="Guédon, Antoine">
+  <meta name="citation_author" content="Maruani, Nissim">
+  <meta name="citation_author" content="Gong, Bingchen">
+  <meta name="citation_author" content="Ovsjanikov, Maks">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_pdf_url" content="https://TODO_DOMAIN.com/static/pdfs/gaussian_wrapping.pdf">
+
+  <!-- Additional SEO -->
+  <meta name="theme-color" content="#2563eb">
+  <meta name="msapplication-TileColor" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://ajax.googleapis.com">
+  <link rel="preconnect" href="https://documentcloud.adobe.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+  <title>From Blobs to Spokes | Gaussian Wrapping</title>
+
+  <!-- Favicon and App Icons -->
+  <link rel="icon" type="image/png" href="static/images/favicon-32.png">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E🎁%3C/text%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="static/images/favicon-180.png">
+
+  <!-- Critical CSS - Load synchronously -->
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <!-- Non-critical CSS - Load asynchronously -->
+  <link rel="preload" href="static/css/bulma-carousel.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/bulma-slider.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="static/css/fontawesome.all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+  <!-- Fallback for browsers that don't support preload -->
+  <noscript>
+    <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  </noscript>
+
+  <!-- Fonts - Optimized loading -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- MathJax for formula rendering -->
+  <script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$']],
+      displayMath: [['$$', '$$']],
+      packages: {'[+]': ['ams']}
+    },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+  };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+  <!-- Defer non-critical JavaScript -->
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="static/js/bulma-carousel.min.js"></script>
+  <script defer src="static/js/bulma-slider.min.js"></script>
+  <script defer src="static/js/index.js"></script>
+
+  <!-- Structured Data for Academic Papers -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "From Blobs to Spokes: High-Fidelity Surface Reconstruction via Oriented Gaussians",
+    "description": "We derive a principled occupancy field for Gaussian Splatting and show how it can be used to extract highly accurate watertight meshes of complex scenes, including extremely thin structures such as bicycle spokes.",
+    "author": [
+      {"@type": "Person", "name": "Diego Gomez", "affiliation": {"@type": "Organization", "name": "École Polytechnique"}},
+      {"@type": "Person", "name": "Antoine Guédon", "affiliation": {"@type": "Organization", "name": "École Polytechnique"}},
+      {"@type": "Person", "name": "Nissim Maruani", "affiliation": {"@type": "Organization", "name": "Inria, Université Côte d'Azur"}},
+      {"@type": "Person", "name": "Bingchen Gong", "affiliation": {"@type": "Organization", "name": "École Polytechnique"}},
+      {"@type": "Person", "name": "Maks Ovsjanikov", "affiliation": {"@type": "Organization", "name": "École Polytechnique"}}
+    ],
+    "datePublished": "2026-01-01",
+    "publisher": {
+      "@type": "Organization",
+      "name": "arXiv"
+    },
+    "url": "https://TODO_DOMAIN.com/gaussian-wrapping",
+    "image": "https://TODO_DOMAIN.com/static/images/social_preview.png",
+    "keywords": ["3D Gaussian Splatting", "Surface Reconstruction", "Mesh Extraction", "Computer Vision"],
+    "abstract": "3D Gaussian Splatting (3DGS) has revolutionized fast novel view synthesis, yet its opacity-based formulation makes surface extraction fundamentally difficult. Unlike implicit methods built on Signed Distance Fields or occupancy, 3DGS lacks a global geometric field, forcing existing approaches to resort to heuristics such as TSDF fusion of blended depth maps. Inspired by the Objects as Volumes framework, we derive a principled occupancy field for Gaussian Splatting and show how it can be used to extract highly accurate watertight meshes of complex scenes. Our key contribution is to introduce a learnable oriented normal at each Gaussian element and to define an adapted attenuation formulation, which leads to closed-form expressions for both the normal and occupancy fields at arbitrary locations in space.",
+    "isAccessibleForFree": true,
+    "license": "https://creativecommons.org/licenses/by/4.0/"
+  }
+  </script>
+</head>
+<body>
+
+  <!-- DEV TODO Banner — remove before publishing -->
+  <div id="dev-todo-banner" style="background:#dc2626;color:#fff;padding:10px 20px;font-family:monospace;font-size:14px;position:sticky;top:0;z-index:9999;">
+    <strong>TODO:</strong>
+    <ul style="margin:4px 0 0 20px;padding:0;list-style:disc;">
+      <li>Fix the arXiv citation</li>
+    </ul>
+  </div>
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <!-- Dark Mode Toggle -->
+  <button class="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle dark mode" aria-label="Toggle dark mode" aria-pressed="false">
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+  </button>
+
+  <!-- More Works Dropdown -->
+  <div class="more-works-container">
+    <button class="more-works-btn" onclick="toggleMoreWorks()" title="View More Works from Our Lab">
+      <i class="fas fa-flask"></i>
+      More Works
+      <i class="fas fa-chevron-down dropdown-arrow"></i>
+    </button>
+    <div class="more-works-dropdown" id="moreWorksDropdown">
+      <div class="dropdown-header">
+        <h4>Related Work</h4>
+        <button class="close-btn" onclick="toggleMoreWorks()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="works-list">
+        <a href="https://anttwo.github.io/milo/" class="work-item" target="_blank">
+          <div class="work-info">
+            <h5>MILo: Mesh-In-the-Loop Optimization for Joint Mesh and Gaussian Splatting</h5>
+            <p>A hybrid representation coupling explicit meshes with 3D Gaussians, with geometry and appearance optimized jointly in the rendering loop.</p>
+          </div>
+          <i class="fas fa-external-link-alt"></i>
+        </a>
+        <a href="https://baowenz.github.io/geometry_grounded_gaussian_splatting/" class="work-item" target="_blank">
+          <div class="work-info">
+            <h5>GGGS: Geometry-Grounded Gaussian Splatting</h5>
+            <p>Concurrent work that similarly takes inspiration from Objects as Volumes. See our supplementary for a theoretical comparison.</p>
+          </div>
+          <i class="fas fa-external-link-alt"></i>
+        </a>
+        <a href="https://zju3dv.github.io/pgsr/" class="work-item" target="_blank">
+          <div class="work-info">
+            <h5>PGSR: Planar-based Gaussian Splatting for Efficient and High-Fidelity Surface Reconstruction</h5>
+            <p>Current state of the art on several metrics.</p>
+          </div>
+          <i class="fas fa-external-link-alt"></i>
+        </a>
+        <a href="https://nissmar.github.io/projects/ponq/" class="work-item" target="_blank">
+          <div class="work-info">
+            <h5>PoNQ: a Neural QEM-based Mesh Representation</h5>
+            <p>Inspiration for the Primal Adaptive Meshing procedure.</p>
+          </div>
+          <i class="fas fa-external-link-alt"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <main id="main-content">
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">From Blobs to Spokes: High-Fidelity Surface Reconstruction via Oriented Gaussians</h1>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://diego1401.github.io" target="_blank">Diego Gomez</a><sup>1*</sup>,</span>
+              <span class="author-block">
+                <a href="https://anttwo.github.io" target="_blank">Antoine Gu&eacute;don</a><sup>1*</sup>,</span>
+              <span class="author-block">
+                <a href="https://nissmar.github.io" target="_blank">Nissim Maruani</a><sup>1,2</sup>,</span>
+              <span class="author-block">
+                <a href="https://s2.hk" target="_blank">Bingchen Gong</a><sup>1</sup>,</span>
+              <span class="author-block">
+                <a href="https://www.lix.polytechnique.fr/~maks/" target="_blank">Maks Ovsjanikov</a><sup>1</sup>
+              </span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <sup>1</sup>LIX, &Eacute;cole Polytechnique, IP Paris, France &nbsp;&nbsp;
+                <sup>2</sup>Inria, Universit&eacute; C&ocirc;te d'Azur</span>
+            </div>
+            <div class="is-size-7 publication-authors" style="margin-top: 0.25rem;">
+              <span class="author-block"><sup>*</sup>Both authors contributed equally to the paper.</span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/TODO_ARXIV_ID" target="_blank"
+                  class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+
+              <span class="link-block">
+                <a href="static/pdfs/supplementary_material.pdf" target="_blank"
+                class="external-link button is-normal is-rounded is-dark">
+                <span class="icon">
+                  <i class="fas fa-file-pdf"></i>
+                </span>
+                <span>Supplementary</span>
+              </a>
+            </span>
+
+            <span class="link-block">
+              <a href="https://github.com/TODO_REPO" target="_blank"
+              class="external-link button is-normal is-rounded is-dark">
+              <span class="icon">
+                <i class="fab fa-github"></i>
+              </span>
+              <span>Code</span>
+            </a>
+          </span>
+
+          <span class="link-block">
+            <a href="https://arxiv.org/abs/TODO_ARXIV_ID" target="_blank"
+            class="external-link button is-normal is-rounded is-dark">
+            <span class="icon">
+              <i class="ai ai-arxiv"></i>
+            </span>
+            <span>arXiv</span>
+          </a>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</section>
+
+
+<!-- Teaser image / video -->
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <img src="static/images/teaser.png" alt="Gaussian Wrapping reconstructs complete watertight meshes including bicycle spokes" loading="lazy" style="width:100%; border-radius: 12px;"/>
+      <h2 class="subtitle has-text-centered" style="margin-top: 1rem;">
+        <strong>Gaussian Wrapping</strong> reconstructs watertight, textured surface meshes of full 3D scenes—including extremely thin structures such as <em>bicycle spokes</em>—at a fraction of the mesh size of concurrent works, by interpreting 3D Gaussians as stochastic oriented surface elements.
+      </h2>
+    </div>
+  </div>
+</section>
+
+
+
+
+<!-- TL;DR — Key Contributions -->
+<section class="section tldr-section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">TL;DR</h2>
+    <p class="tldr-lead">
+      Gaussian Wrapping interprets 3D Gaussians as stochastic, oriented surface elements and derives closed-form vacancy and normal fields, enabling fast, watertight, and compact mesh extraction of full 3D scenes.
+    </p>
+    <div class="columns is-centered is-multiline tldr-stats">
+
+      <div class="column is-one-quarter-desktop is-half-tablet has-text-centered">
+        <!-- TODO: replace X with actual extraction time in minutes -->
+        <div class="tldr-stat-value">27 min</div>
+        <p class="tldr-stat-label">Fast Training</p>
+        <p class="tldr-stat-desc">Training time on average on the T&T dataset.</p>
+      </div>
+
+      <div class="column is-one-quarter-desktop is-half-tablet has-text-centered">
+        <div class="tldr-stat-value">100%</div>
+        <p class="tldr-stat-label">Watertight</p>
+        <p class="tldr-stat-desc">Fully watertight meshes, no need to filter any faces.</p>
+      </div>
+
+      <div class="column is-one-quarter-desktop is-half-tablet has-text-centered">
+        <div class="tldr-stat-value">SOTA</div>
+        <p class="tldr-stat-label">Higher Accuracy and Detail Extraction</p>
+        <p class="tldr-stat-desc">State-of-the-art F-Score on DTU and Tanks &amp; Temples, recovering thin structures other methods miss.</p>
+      </div>
+
+      <div class="column is-one-quarter-desktop is-half-tablet has-text-centered">
+        <div class="tldr-stat-value">4.5&times;</div>
+        <p class="tldr-stat-label">Lighter Meshes</p>
+        <p class="tldr-stat-desc">Using only 2 pivots per Gaussian (as opposed to 9) yield less vertices while retaining quality.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- Pipeline Overview -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Method Overview</h2>
+    <img src="static/images/pipeline.png" alt="Gaussian Wrapping pipeline overview" loading="lazy" style="width:100%; border-radius: var(--border-radius);"/>
+    <p class="figure-caption">
+      <strong>Gaussian Wrapping pipeline.</strong> Starting from a set of posed images, we train a Gaussian Splatting model augmented with a learnable oriented normal per Gaussian. A normal alignment loss and normal-aware densification enforce a wrapping shell. We then derive closed-form vacancy $v$ and normal field $\mathcal{N}$ from the trained Gaussians, and extract a watertight mesh via Pivot-Based Marching Tetrahedra or our novel Primal Adaptive Meshing.
+    </p>
+  </div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- Section 1 — Oriented Gaussians & Training                    -->
+<!-- ============================================================ -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">1. Oriented Gaussians &amp; Gaussian Wrapping</h2>
+
+    <div class="columns is-centered">
+      <div class="column is-10 content has-text-justified">
+
+        <p>
+          Standard 3DGS treats Gaussians as symmetric &ldquo;blobs&rdquo; of density—an interpretation that conflicts with the nature of a surface, which is an <em>asymmetric boundary</em> separating empty space from occupied matter. This symmetry bias pulls reconstructed surfaces inward or outward, and is particularly damaging for thin structures where opposing Gaussian tails interfere.
+        </p>
+        <p>
+          We address this by endowing each Gaussian with a single <strong>learnable oriented normal</strong> $n_i \in \mathcal{S}^2$—the only additional parameter in our framework. Each Gaussian now models density decay only on its outward-facing side, while treating the inward-facing side as fully occupied. This reinterprets every Gaussian as a <em>stochastic oriented surface element</em> with a clear inside and outside.
+        </p>
+
+        <h3 class="title is-4" style="margin-top: 2rem;">Wrapping the Surface</h3>
+        <p>
+          For reconstruction to work, Gaussians must form a sealed, continuous shell around the object—they must <em>wrap</em> it. We promote this through two complementary mechanisms during training:
+        </p>
+        <ul>
+          <li style="margin-bottom: 0.75rem;">
+            <strong>Normal alignment loss.</strong> Rendering depth and normals with the splatting rasterizer yields an estimate of the surface depth and the expected orientation of Gaussians near the surface. We enforce alignment between the rendered <em>oriented</em> normals $N(p)$ and the image-space depth gradient $\nabla D(p)$ via:
+            $$\mathcal{L}_{\text{N}} = \sum_{p} 1 - N(p) \cdot \nabla D(p)$$
+            We modify the CUDA rasterizer to render depth as the exact $0.5$-isosurface of our geometric field via binary search.
+          </li>
+          <li>
+            <strong>Normal-aware densification.</strong> Gaps in the wrapping shell cause $\mathcal{L}_{\text{N}}$ to rise locally. Every $K$ iterations we propagate per-pixel errors back to individual Gaussians via their blending weights, then clone high-error Gaussians with flipped normals—closing holes and reinforcing the shell even around extremely thin structures such as bicycle spokes.
+          </li>
+        </ul>
+
+      </div>
+    </div>
+
+    <!-- Qualitative comparison: Bicycle and Garden scenes -->
+    <h3 class="title is-4 has-text-centered" style="margin-top: 1rem;">Qualitative Comparisons</h3>
+    <p class="has-text-centered" style="margin-bottom: 1.5rem; color: var(--text-secondary);">
+      Mesh renderings on the Bicycle and Garden scenes (Mip-NeRF 360). Our method recovers significantly finer surface detail and thin structures compared to baselines.
+    </p>
+
+    <div class="comparison-widget" id="qualitative-slider-widget">
+      <div class="comparison-controls"></div>
+      <div class="qualitative-layout">
+        <div class="gt-reference-panel">
+          <div class="gt-reference-label">GT Reference</div>
+          <img id="gt-full-img" src="" alt="GT Full Reference">
+          <div class="gt-closeup-label">Close-up</div>
+          <img id="gt-reference-img" src="" alt="GT Close-up">
+        </div>
+        <div class="comparison-slider-container">
+          <img class="img-right" src="" alt="Ours">
+          <img class="img-left" src="" alt="Comparison">
+          <div class="comparison-divider">
+            <div class="comparison-handle">&#8596;</div>
+          </div>
+          <span class="comparison-label-left">Method</span>
+          <span class="comparison-label-right">Ours</span>
+        </div>
+      </div>
+    </div>
+    <p class="figure-caption">
+      Drag the slider to compare. Our method recovers fine surface detail and closes geometric holes (e.g., bicycle spokes) where competing methods erode geometry or fail entirely.
+    </p>
+
+  </div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- Section 2 — Gaussian Vector & Normal Fields                  -->
+<!-- ============================================================ -->
+<section class="section hero is-light">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">2. Gaussian Vector &amp; Normal Fields</h2>
+
+    <div class="columns is-centered">
+      <div class="column is-10 content has-text-justified">
+
+        <p>
+          When Gaussians properly wrap the scene, the <em>Objects as Volumes</em> framework applied to our oriented attenuation yields closed-form geometric quantities directly from the Gaussian parameters—with no additional learnable parameters.<strong> Please see our paper and supplementary for the derivation of these formulas.</strong>
+        </p>
+
+        <h3 class="title is-4" style="margin-top: 2rem;">Gaussian Normal Field</h3>
+        <p>
+          Applying the <em>Objects as Volumes</em> result to our reciprocal attenuation yields our main theoretical contribution: a closed-form vector field $V$ and its normalization $\mathcal{N}$, the Gaussian Normal Field.
+        </p>
+
+        <div class="formula-box">
+          <p class="formula-label">Proposition 1 — Gaussian Vector &amp; Normal Fields</p>
+          $$V(x) := \nabla\log v(x) = \sum_{i=1}^N \mathbf{1}_{n_i^\top(x - \mu_i)\,\geq\, 0}\; \nabla\log\!\left(1 - G_i(x)\right)$$
+          $$\mathcal{N}(x) := \frac{V(x)}{\|V(x)\|}$$
+          <p style="margin-top: 0.75rem; margin-bottom: 0; font-size: 0.95rem; color: var(--text-secondary);">
+            $\mathcal{N}(x)$ is well-defined and coincides with the true normal field of the expected stochastic surface in a neighbourhood of the surface.
+          </p>
+        </div>
+
+        <p>
+          These quantities can be queried at any point $x$ in space by considering the $K$-nearest Gaussians. No additional learnable parameters are introduced.
+        </p>
+
+      </div>
+    </div>
+
+    <!-- Vector field alignment figure -->
+    <div style="margin-top: 2rem;">
+      <div class="comparison-widget" id="normalfield-slider-widget">
+        <div class="comparison-controls"></div>
+        <div class="comparison-slider-container">
+          <img class="img-right" src="" alt="Normal Field">
+          <img class="img-left" src="" alt="Reference">
+          <div class="comparison-divider">
+            <div class="comparison-handle">&#8596;</div>
+          </div>
+          <span class="comparison-label-left">Reference</span>
+          <span class="comparison-label-right">Normal Field N</span>
+        </div>
+      </div>
+      <p class="figure-caption">
+        <strong>Gaussian normal field aligned with surface normals.</strong>
+        Drag the slider to compare. The close agreement between rendered normals and $\mathcal{N}$ confirms the field is well-aligned with the surface.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================ -->
+<!-- Section 3 — Primal Adaptive Meshing                          -->
+<!-- ============================================================ -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">3. Primal Adaptive Meshing</h2>
+
+    <div class="columns is-centered">
+      <div class="column is-10 content has-text-justified">
+        <p>
+          To decouple mesh resolution from the Gaussian distribution and enable region-of-interest super-resolution, we introduce a five-step pipeline that leverages the global fields $v$ and $\mathcal{N}$:
+        </p>
+
+        <ol style="line-height: 2;">
+          <li><strong>Vertices Initialization.</strong> Sample vertices from the Pivot-Based MTet mesh faces—optionally restricted to a specific region-of-interest—weighting each face inversely proportional to its distance from the nearest training camera.</li>
+          <li>
+            <strong>Isosurface Refinement.</strong> Project vertices onto the $0.5$-isosurface of $v$ via the following iterative Newton update, using $\mathcal{N}$ as the geometric guide:
+            <div class="formula-box" style="margin: 1rem 0;">
+              $$x_{i+1} = x_i + \frac{1}{2}\bigl(0.5 - v(x_i)\bigr)\,\mathcal{N}(x_i)$$
+            </div>
+          </li>
+          <li><strong>Filtering.</strong> Remove vertices with $|0.5 - v(x)| > \epsilon$ as outliers. Repeat stages 1–3 until no points are removed.</li>
+          <li><strong>Delaunay.</strong> Compute the Delaunay tetrahedralization of the remaining vertices; classify each tetrahedron as inside or outside based on the vacancy of randomly sampled interior points.</li>
+          <li><strong>Mesh extraction.</strong> Extract triangle faces that separate inside and outside tetrahedra.</li>
+        </ol>
+
+        <p style="margin-top: 1rem;">
+          This approach effectively decouples mesh resolution from the Gaussian distribution, enabling extremely fine meshing of restricted scene segments. While global distance-based metrics remain largely unchanged—being insensitive to high-frequency detail by construction—the resulting meshes exhibit substantially improved smoothness and reduced discretization artifacts.
+        </p>
+
+      </div>
+    </div>
+
+    <!-- Newton refinement figure -->
+    <div style="margin-top: 2rem;">
+      <img src="static/images/refinement_figure.jpg" alt="Effect of Newton projection on vacancy values" loading="lazy" style="width:100%; border-radius: var(--border-radius);"/>
+      <p class="figure-caption">
+        <strong>Effect of the Newton projection step.</strong>
+        Bottom: distribution of vacancy values $v(x)$ before (blue) and after (red) Newton refinement, evaluated on the Ignatius scene with 3M sampled points and 10 refinement steps. After projection, points collapse tightly onto the isosurface $v = 0.5$. Top: qualitative mesh comparison on the Truck scene showing the resulting improvement in surface detail.
+      </p>
+    </div>
+
+    <!-- MTet vs PAM comparison figure -->
+    <div style="margin-top: 2.5rem;">
+      <h3 class="title is-4 has-text-centered">Pivot-Based MTet vs. Primal Adaptive Meshing</h3>
+      <div class="comparison-widget" id="pam-slider-widget">
+        <div class="comparison-controls"></div>
+        <div class="comparison-slider-container">
+          <img class="img-right" src="" alt="PAM">
+          <img class="img-left" src="" alt="MTet">
+          <div class="comparison-divider">
+            <div class="comparison-handle">&#8596;</div>
+          </div>
+          <span class="comparison-label-left">MTet</span>
+          <span class="comparison-label-right">PAM (Ours)</span>
+        </div>
+      </div>
+      <p class="figure-caption">
+        <strong>Primal Adaptive Meshing on restricted scene segments.</strong>
+        Drag the slider to compare. PAM produces topologically clean surfaces that faithfully reflect the underlying Gaussian isosurface, free of staircase artifacts.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- Render Comparisons (Video Slider) -->
+<section class="section hero is-light" id="render-comparisons">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Blender Render Comparisons</h2>
+    <p class="has-text-centered" style="margin-bottom: 1.5rem; color: var(--text-secondary);">
+      Blender renders comparisons on real-world scenes. Drag the slider to compare baseline methods against ours.
+    </p>
+
+    <div class="comparison-widget" id="video-comparison-widget">
+      <div class="comparison-controls"></div>
+      <div class="video-comparison-container"
+           role="slider"
+           aria-label="Video comparison slider"
+           aria-valuemin="0"
+           aria-valuemax="100"
+           aria-valuenow="50"
+           tabindex="0">
+        <video class="video-comparison-right" muted loop playsinline aria-hidden="true"></video>
+        <video class="video-comparison-left" muted loop playsinline aria-hidden="true"></video>
+        <div class="comparison-divider" aria-hidden="true">
+          <div class="comparison-handle">&#8596;</div>
+        </div>
+        <span class="comparison-label-left">Baseline</span>
+        <span class="comparison-label-right">Ours</span>
+        <div class="video-play-pause-overlay" aria-hidden="true">
+          <i class="fas fa-pause"></i>
+        </div>
+      </div>
+      <div class="video-timeline">
+        <div class="video-timeline-track">
+          <div class="video-timeline-filled"></div>
+          <div class="video-timeline-handle"></div>
+        </div>
+      </div>
+    </div>
+    <p class="figure-caption">
+      Click to pause, then drag the timeline to scrub through frames. Use the vertical slider to compare methods side by side.
+    </p>
+  </div>
+</section>
+
+<!-- BibTeX -->
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <div class="bibtex-header">
+      <h2 class="title">BibTeX</h2>
+      <button class="copy-bibtex-btn" onclick="copyBibTeX()" title="Copy BibTeX to clipboard">
+        <i class="fas fa-copy"></i>
+        <span class="copy-text">Copy</span>
+      </button>
+    </div>
+    <pre id="bibtex-code"><code>@article{gomez2026gaussianwrapping,
+  title={From Blobs to Spokes: High-Fidelity Surface Reconstruction via Oriented Gaussians},
+  author={Gomez, Diego and Gu{\'e}don, Antoine and Maruani, Nissim and Gong, Bingchen and Ovsjanikov, Maks},
+  journal={arXiv preprint arXiv:TODO_ARXIV_ID},
+  year={2026}
+}</code></pre>
+  </div>
+</section>
+
+
+  <footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content has-text-centered">
+          <p>
+            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+            This website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  </body>
+  </html>
