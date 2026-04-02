@@ -147,6 +147,9 @@
 [data-theme="dark"] .figure-caption {
   color: var(--text-secondary);
 }
+[data-theme="dark"] .figure-caption strong {
+  color: var(--text-primary);
+}
 
 /* Dark mode vignette — white padding buffer + fade at edges so content is never clipped.
    The padding creates a white border zone; the vignette only fades that border, never
@@ -1379,6 +1382,16 @@ a:focus {
     width: 40px;
     height: 40px;
   }
+  .magnifier-help-btn {
+    top: 0.75rem;
+    left: 3.75rem;
+    width: 40px;
+    height: 40px;
+  }
+  .magnifier-help-popup {
+    top: 3.75rem;
+    left: 0.75rem;
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -1389,11 +1402,147 @@ a:focus {
     height: 38px;
     font-size: 1rem;
   }
+  .magnifier-help-btn {
+    top: 0.5rem;
+    left: 3.25rem;
+    width: 38px;
+    height: 38px;
+    font-size: 1rem;
+  }
+  .magnifier-help-popup {
+    top: 3.25rem;
+    left: 0.5rem;
+  }
+}
+
+/* ── Magnifier Lens ─────────────────────────────────────────────────────── */
+.magnifier-lens {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), inset 0 0 12px rgba(255, 255, 255, 0.1);
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  background-repeat: no-repeat;
+}
+
+.magnifier-lens.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Magnifier help button — positioned next to dark mode toggle */
+.magnifier-help-btn {
+  position: fixed;
+  top: 1rem;
+  left: 4.25rem;
+  width: 44px;
+  height: 44px;
+  background: var(--background-primary);
+  color: var(--text-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+  line-height: 1;
+}
+
+.magnifier-help-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-color);
+}
+
+.magnifier-help-btn:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 3px;
+}
+
+.magnifier-help-popup {
+  position: fixed;
+  top: 4.25rem;
+  left: 1rem;
+  background: var(--background-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 16px;
+  padding: 0.85rem 1.1rem;
+  z-index: 999;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.magnifier-help-popup.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.magnifier-help-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.magnifier-help-row kbd {
+  display: inline-block;
+  min-width: 2rem;
+  text-align: center;
+  padding: 0.15rem 0.45rem;
+  font-size: 0.75rem;
+  font-family: inherit;
+  background: var(--background-accent);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  box-shadow: 0 1px 0 var(--border-color);
+}
+
+.zoomable-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--border-radius);
+  line-height: 0;
+}
+
+.zoomable-image-wrapper img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Hide default cursor when magnifier is active */
+.magnifier-active {
+  cursor: none !important;
+}
+.magnifier-active * {
+  cursor: none !important;
 }
 
 /* Print styles */
 @media print {
-  .dark-mode-toggle {
+  .dark-mode-toggle,
+  .magnifier-help-btn,
+  .magnifier-help-popup {
     display: none;
   }
 

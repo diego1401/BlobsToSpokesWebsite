@@ -107,6 +107,7 @@
   <script defer src="static/js/fontawesome.all.min.js"></script>
   <script defer src="static/js/bulma-carousel.min.js"></script>
   <script defer src="static/js/bulma-slider.min.js"></script>
+  <script defer src="static/js/magnifier.js"></script>
   <script defer src="static/js/index.js"></script>
 
   <!-- Structured Data for Academic Papers -->
@@ -140,12 +141,12 @@
 <body>
 
   <!-- DEV TODO Banner — remove before publishing -->
-  <div id="dev-todo-banner" style="background:#dc2626;color:#fff;padding:10px 20px;font-family:monospace;font-size:14px;position:sticky;top:0;z-index:9999;">
+  <!-- <div id="dev-todo-banner" style="background:#dc2626;color:#fff;padding:10px 20px;font-family:monospace;font-size:14px;position:sticky;top:0;z-index:9999;">
     <strong>TODO:</strong>
     <ul style="margin:4px 0 0 20px;padding:0;list-style:disc;">
       <li>Fix the arXiv citation</li>
     </ul>
-  </div>
+  </div> -->
 
   <!-- Scroll to Top Button -->
   <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
@@ -169,6 +170,16 @@
       <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
     </svg>
   </button>
+
+  <!-- Magnifier Help Button -->
+  <button class="magnifier-help-btn" onclick="toggleMagnifierHelp()" title="Magnifier instructions" aria-label="Magnifier instructions">
+    🔍
+  </button>
+  <div class="magnifier-help-popup" id="magnifierHelpPopup">
+    <div class="magnifier-help-row"><kbd>X</kbd> Hold to activate magnifier</div>
+    <div class="magnifier-help-row"><kbd>Scroll</kbd> Adjust zoom level</div>
+    <div class="magnifier-help-row"><kbd>C</kbd> Toggle comparison side</div>
+  </div>
 
   <!-- More Works Dropdown -->
   <div class="more-works-container">
@@ -260,16 +271,6 @@
                 </a>
               </span>
 
-              <span class="link-block">
-                <a href="static/pdfs/supplementary_material.pdf" target="_blank"
-                class="external-link button is-normal is-rounded is-dark">
-                <span class="icon">
-                  <i class="fas fa-file-pdf"></i>
-                </span>
-                <span>Supplementary</span>
-              </a>
-            </span>
-
             <span class="link-block">
               <a href="https://github.com/TODO_REPO" target="_blank"
               class="external-link button is-normal is-rounded is-dark">
@@ -302,7 +303,7 @@
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="hero-body">
-      <img src="static/images/teaser.png" alt="Gaussian Wrapping reconstructs complete watertight meshes including bicycle spokes" loading="lazy" style="width:100%; border-radius: 12px;"/>
+      <img class="zoomable-image" src="static/images/teaser.png" alt="Gaussian Wrapping reconstructs complete watertight meshes including bicycle spokes" loading="lazy" style="width:100%; border-radius: 12px;"/>
       <h2 class="subtitle has-text-centered" style="margin-top: 1rem;">
         <strong>Gaussian Wrapping</strong> reconstructs watertight, textured surface meshes of full 3D scenes—including extremely thin structures such as <em>bicycle spokes</em>—at a fraction of the mesh size of concurrent works, by interpreting 3D Gaussians as stochastic oriented surface elements.
       </h2>
@@ -352,11 +353,53 @@
 </section>
 
 
+<!-- Render Comparisons (Video Slider) -->
+<section class="section hero is-light" id="render-comparisons">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Blender Render Comparisons</h2>
+    <p class="has-text-centered" style="margin-bottom: 1.5rem; color: var(--text-secondary);">
+      Blender renders comparisons on real-world scenes. Drag the slider to compare baseline methods against ours.
+    </p>
+
+    <div class="comparison-widget" id="video-comparison-widget">
+      <div class="comparison-controls"></div>
+      <div class="video-comparison-container"
+           role="slider"
+           aria-label="Video comparison slider"
+           aria-valuemin="0"
+           aria-valuemax="100"
+           aria-valuenow="50"
+           tabindex="0">
+        <video class="video-comparison-right" muted loop playsinline aria-hidden="true"></video>
+        <video class="video-comparison-left" muted loop playsinline aria-hidden="true"></video>
+        <div class="comparison-divider" aria-hidden="true">
+          <div class="comparison-handle">&#8596;</div>
+        </div>
+        <span class="comparison-label-left">Baseline</span>
+        <span class="comparison-label-right">Ours</span>
+        <div class="video-play-pause-overlay" aria-hidden="true">
+          <i class="fas fa-pause"></i>
+        </div>
+      </div>
+      <div class="video-timeline">
+        <div class="video-timeline-track">
+          <div class="video-timeline-filled"></div>
+          <div class="video-timeline-handle"></div>
+        </div>
+      </div>
+    </div>
+    <p class="figure-caption">
+      Click to pause, then drag the timeline to scrub through frames. Use the vertical slider to compare methods side by side.
+    </p>
+  </div>
+</section>
+
+
 <!-- Pipeline Overview -->
 <section class="section">
   <div class="container is-max-desktop">
     <h2 class="title is-3 has-text-centered">Method Overview</h2>
-    <img src="static/images/pipeline.png" alt="Gaussian Wrapping pipeline overview" loading="lazy" style="width:100%; border-radius: var(--border-radius);"/>
+    <img class="zoomable-image" src="static/images/pipeline.png" alt="Gaussian Wrapping pipeline overview" loading="lazy" style="width:100%; border-radius: var(--border-radius);"/>
     <p class="figure-caption">
       <strong>Gaussian Wrapping pipeline.</strong> Starting from a set of posed images, we train a Gaussian Splatting model augmented with a learnable oriented normal per Gaussian. A normal alignment loss and normal-aware densification enforce a wrapping shell. We then derive closed-form vacancy $v$ and normal field $\mathcal{N}$ from the trained Gaussians, and extract a watertight mesh via Pivot-Based Marching Tetrahedra or our novel Primal Adaptive Meshing.
     </p>
@@ -527,7 +570,7 @@
 
     <!-- Newton refinement figure -->
     <div style="margin-top: 2rem;">
-      <img src="static/images/refinement_figure.jpg" alt="Effect of Newton projection on vacancy values" loading="lazy" style="width:100%; border-radius: var(--border-radius);"/>
+      <img class="zoomable-image" src="static/images/refinement_figure.jpg" alt="Effect of Newton projection on vacancy values" loading="lazy" style="width:100%; border-radius: var(--border-radius);"/>
       <p class="figure-caption">
         <strong>Effect of the Newton projection step.</strong>
         Bottom: distribution of vacancy values $v(x)$ before (blue) and after (red) Newton refinement, evaluated on the Ignatius scene with 3M sampled points and 10 refinement steps. After projection, points collapse tightly onto the isosurface $v = 0.5$. Top: qualitative mesh comparison on the Truck scene showing the resulting improvement in surface detail.
@@ -557,48 +600,6 @@
 
   </div>
 </section>
-
-<!-- Render Comparisons (Video Slider) -->
-<section class="section hero is-light" id="render-comparisons">
-  <div class="container is-max-desktop">
-    <h2 class="title is-3 has-text-centered">Blender Render Comparisons</h2>
-    <p class="has-text-centered" style="margin-bottom: 1.5rem; color: var(--text-secondary);">
-      Blender renders comparisons on real-world scenes. Drag the slider to compare baseline methods against ours.
-    </p>
-
-    <div class="comparison-widget" id="video-comparison-widget">
-      <div class="comparison-controls"></div>
-      <div class="video-comparison-container"
-           role="slider"
-           aria-label="Video comparison slider"
-           aria-valuemin="0"
-           aria-valuemax="100"
-           aria-valuenow="50"
-           tabindex="0">
-        <video class="video-comparison-right" muted loop playsinline aria-hidden="true"></video>
-        <video class="video-comparison-left" muted loop playsinline aria-hidden="true"></video>
-        <div class="comparison-divider" aria-hidden="true">
-          <div class="comparison-handle">&#8596;</div>
-        </div>
-        <span class="comparison-label-left">Baseline</span>
-        <span class="comparison-label-right">Ours</span>
-        <div class="video-play-pause-overlay" aria-hidden="true">
-          <i class="fas fa-pause"></i>
-        </div>
-      </div>
-      <div class="video-timeline">
-        <div class="video-timeline-track">
-          <div class="video-timeline-filled"></div>
-          <div class="video-timeline-handle"></div>
-        </div>
-      </div>
-    </div>
-    <p class="figure-caption">
-      Click to pause, then drag the timeline to scrub through frames. Use the vertical slider to compare methods side by side.
-    </p>
-  </div>
-</section>
-
 <!-- BibTeX -->
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">

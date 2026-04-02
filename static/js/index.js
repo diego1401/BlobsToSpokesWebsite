@@ -27,6 +27,27 @@ function toggleDarkMode() {
   if (btn) btn.setAttribute('aria-pressed', next === 'dark' ? 'true' : 'false');
 }
 
+// Magnifier Help Toggle
+function toggleMagnifierHelp() {
+  var popup = document.getElementById('magnifierHelpPopup');
+  popup.classList.toggle('show');
+}
+
+(function() {
+  document.addEventListener('DOMContentLoaded', function() {
+    var btn = document.querySelector('.magnifier-help-btn');
+    var popup = document.getElementById('magnifierHelpPopup');
+    if (!btn || !popup) return;
+    btn.addEventListener('mouseleave', function(e) {
+      // Only close if not moving into the popup
+      if (!popup.contains(e.relatedTarget)) popup.classList.remove('show');
+    });
+    popup.addEventListener('mouseleave', function(e) {
+      if (!btn.contains(e.relatedTarget)) popup.classList.remove('show');
+    });
+  });
+})();
+
 // More Works Dropdown Functionality
 function toggleMoreWorks() {
     const dropdown = document.getElementById('moreWorksDropdown');
@@ -235,6 +256,22 @@ class ComparisonSlider {
     this._setPosition(this._getPercent(e.touches[0].clientX));
   }
 
+  toggle() {
+    this._toggledRight = !this._toggledRight;
+    var target = this._toggledRight ? 95 : 5;
+    var self = this;
+    var start = this.position;
+    var duration = 300;
+    var startTime = performance.now();
+    function animate(now) {
+      var t = Math.min((now - startTime) / duration, 1);
+      t = t * (2 - t); // ease-out
+      self._setPosition(start + (target - start) * t);
+      if (t < 1) requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+  }
+
   updateImages(leftSrc, rightSrc, leftLabel, rightLabel) {
     this.imgLeft.src = leftSrc;
     this.imgRight.src = rightSrc;
@@ -336,6 +373,15 @@ function initQualitativeSlider() {
   controls.appendChild(methodGroup);
 
   update();
+
+  new MagnifierLens(sliderContainer, {
+    isComparison: true,
+    onToggle: function() { slider.toggle(); },
+    getPosition: function() { return slider.position; },
+    getSources: function() {
+      return { left: slider.imgLeft.src, right: slider.imgRight.src };
+    }
+  });
 }
 
 function initNormalFieldSlider() {
@@ -394,6 +440,15 @@ function initNormalFieldSlider() {
   controls.appendChild(leftGroup);
 
   update();
+
+  new MagnifierLens(sliderContainer, {
+    isComparison: true,
+    onToggle: function() { slider.toggle(); },
+    getPosition: function() { return slider.position; },
+    getSources: function() {
+      return { left: slider.imgLeft.src, right: slider.imgRight.src };
+    }
+  });
 }
 
 function initPAMSlider() {
@@ -445,6 +500,15 @@ function initPAMSlider() {
   controls.appendChild(viewGroup);
 
   update();
+
+  new MagnifierLens(sliderContainer, {
+    isComparison: true,
+    onToggle: function() { slider.toggle(); },
+    getPosition: function() { return slider.position; },
+    getSources: function() {
+      return { left: slider.imgLeft.src, right: slider.imgRight.src };
+    }
+  });
 }
 
 // ── Video Comparison Slider ─────────────────────────────────────────────
@@ -757,6 +821,26 @@ function initVideoComparisonSlider() {
   controls.appendChild(sceneGroup);
 
   loadScene(scenes[0]);
+
+  new MagnifierLens(container, {
+    isComparison: true,
+    isVideo: true,
+    onToggle: function() {
+      var target = position > 50 ? 5 : 95;
+      var start = position;
+      var duration = 300;
+      var startTime = performance.now();
+      function animate(now) {
+        var t = Math.min((now - startTime) / duration, 1);
+        t = t * (2 - t);
+        setPosition(start + (target - start) * t);
+        if (t < 1) requestAnimationFrame(animate);
+      }
+      requestAnimationFrame(animate);
+    },
+    getPosition: function() { return position; },
+    getVideoElements: function() { return { left: videoLeft, right: videoRight }; }
+  });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -764,4 +848,16 @@ document.addEventListener('DOMContentLoaded', function() {
   initNormalFieldSlider();
   initPAMSlider();
   initVideoComparisonSlider();
+
+  // Attach magnifiers to static zoomable images
+  document.querySelectorAll('.zoomable-image').forEach(function(img) {
+    var wrapper = document.createElement('div');
+    wrapper.className = 'zoomable-image-wrapper';
+    img.parentNode.insertBefore(wrapper, img);
+    wrapper.appendChild(img);
+    new MagnifierLens(wrapper, {
+      getSources: function() { return { left: img.src }; },
+      getPosition: function() { return 100; }
+    });
+  });
 });
