@@ -17,8 +17,8 @@
   <meta property="og:site_name" content="LIX, École Polytechnique">
   <meta property="og:title" content="From Blobs to Spokes: High-Fidelity Surface Reconstruction via Oriented Gaussians">
   <meta property="og:description" content="Gaussian Wrapping: a principled framework that interprets 3D Gaussians as oriented surface elements, deriving closed-form occupancy and normal fields for high-fidelity, watertight mesh reconstruction of complete 3D scenes.">
-  <meta property="og:url" content="https://TODO_DOMAIN.com/gaussian-wrapping">
-  <meta property="og:image" content="https://TODO_DOMAIN.com/static/images/social_preview.png">
+  <meta property="og:url" content="https://diego1401.github.io/BlobsToSpokesWebsite/">
+  <meta property="og:image" content="https://diego1401.github.io/BlobsToSpokesWebsite/static/images/teaser.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Gaussian Wrapping - Surface Reconstruction via Oriented Gaussians">
@@ -34,7 +34,7 @@
   <meta name="twitter:creator" content="">
   <meta name="twitter:title" content="From Blobs to Spokes: High-Fidelity Surface Reconstruction via Oriented Gaussians">
   <meta name="twitter:description" content="Gaussian Wrapping: principled occupancy + normal fields for 3DGS enabling watertight meshes of complete scenes, including bicycle spokes. State-of-the-art on DTU and Tanks and Temples.">
-  <meta name="twitter:image" content="https://TODO_DOMAIN.com/static/images/social_preview.png">
+  <meta name="twitter:image" content="https://diego1401.github.io/BlobsToSpokesWebsite/static/images/teaser.png">
   <meta name="twitter:image:alt" content="Gaussian Wrapping - Surface Reconstruction via Oriented Gaussians">
 
   <!-- Academic/Research Specific -->
@@ -129,8 +129,8 @@
       "@type": "Organization",
       "name": "arXiv"
     },
-    "url": "https://TODO_DOMAIN.com/gaussian-wrapping",
-    "image": "https://TODO_DOMAIN.com/static/images/social_preview.png",
+    "url": "https://diego1401.github.io/BlobsToSpokesWebsite/",
+    "image": "https://diego1401.github.io/BlobsToSpokesWebsite/static/images/teaser.png",
     "keywords": ["3D Gaussian Splatting", "Surface Reconstruction", "Mesh Extraction", "Computer Vision"],
     "abstract": "3D Gaussian Splatting (3DGS) has revolutionized fast novel view synthesis, yet its opacity-based formulation makes surface extraction fundamentally difficult. Unlike implicit methods built on Signed Distance Fields or occupancy, 3DGS lacks a global geometric field, forcing existing approaches to resort to heuristics such as TSDF fusion of blended depth maps. Inspired by the Objects as Volumes framework, we derive a principled occupancy field for Gaussian Splatting and show how it can be used to extract highly accurate watertight meshes of complex scenes. Our key contribution is to introduce a learnable oriented normal at each Gaussian element and to define an adapted attenuation formulation, which leads to closed-form expressions for both the normal and occupancy fields at arbitrary locations in space.",
     "isAccessibleForFree": true,
@@ -139,14 +139,6 @@
   </script>
 </head>
 <body>
-
-  <!-- DEV TODO Banner — remove before publishing -->
-  <!-- <div id="dev-todo-banner" style="background:#dc2626;color:#fff;padding:10px 20px;font-family:monospace;font-size:14px;position:sticky;top:0;z-index:9999;">
-    <strong>TODO:</strong>
-    <ul style="margin:4px 0 0 20px;padding:0;list-style:disc;">
-      <li>Fix the arXiv citation</li>
-    </ul>
-  </div> -->
 
   <!-- Scroll to Top Button -->
   <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
@@ -259,17 +251,15 @@
               <span class="author-block"><sup>*</sup>Both authors contributed equally to the paper.</span>
             </div>
 
-            <div class="column has-text-centered">
-              <div class="publication-links">
-                <span class="link-block">
-                  <a href="https://arxiv.org/abs/TODO_ARXIV_ID" target="_blank"
-                  class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon">
-                    <i class="fas fa-file-pdf"></i>
-                  </span>
-                  <span>Paper</span>
-                </a>
-              </span>
+            <span class="link-block">
+                <a href="https://arxiv.org/abs/TODO_ARXIV_ID" target="_blank"
+                class="external-link button is-normal is-rounded is-dark">
+                <span class="icon">
+                  <i class="ai ai-arxiv"></i>
+                </span>
+                <span>arXiv</span>
+              </a>
+            </span>
 
             <span class="link-block">
               <a href="https://github.com/TODO_REPO" target="_blank"
@@ -277,19 +267,11 @@
               <span class="icon">
                 <i class="fab fa-github"></i>
               </span>
-              <span>Code</span>
+              <span>Code [Coming Soon]</span>
             </a>
           </span>
 
-          <span class="link-block">
-            <a href="https://arxiv.org/abs/TODO_ARXIV_ID" target="_blank"
-            class="external-link button is-normal is-rounded is-dark">
-            <span class="icon">
-              <i class="ai ai-arxiv"></i>
-            </span>
-            <span>arXiv</span>
-          </a>
-        </span>
+          
       </div>
     </div>
   </div>
@@ -324,7 +306,6 @@
     <div class="columns is-centered is-multiline tldr-stats">
 
       <div class="column is-one-quarter-desktop is-half-tablet has-text-centered">
-        <!-- TODO: replace X with actual extraction time in minutes -->
         <div class="tldr-stat-value">27 min</div>
         <p class="tldr-stat-label">Fast Training</p>
         <p class="tldr-stat-desc">Training time on average on the T&T dataset.</p>
@@ -598,6 +579,17 @@
       </p>
     </div>
 
+  </div>
+</section>
+<!-- Acknowledgements -->
+<section class="section" id="Acknowledgements">
+  <div class="container is-max-desktop content">
+    <div class="bibtex-header">
+      <h2 class="title">Acknowledgements</h2>
+    </div>
+    <p>
+      We are grateful to George Drettakis for insightful discussions. Parts of this work were supported by the ERC Consolidator Grant "VEGA" (No. 101087347), the ERC Advanced Grant "explorer" (No. 101097259), as well as gifts from Ansys Inc., and Adobe Research. Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the EU or the European Research Council. Neither the EU nor the granting authority can be held responsible for them.
+    </p>
   </div>
 </section>
 <!-- BibTeX -->
