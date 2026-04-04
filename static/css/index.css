@@ -45,7 +45,8 @@
   --gradient-subtle: linear-gradient(135deg, #1e293b 0%, #334155 100%);
 }
 
-[data-theme="dark"] .hero.is-light {
+[data-theme="dark"] .hero.is-light,
+[data-theme="dark"] .is-light-bg {
   background: var(--background-secondary);
   border-top-color: var(--border-color);
   border-bottom-color: var(--border-color);
@@ -289,7 +290,8 @@ body {
   overflow: hidden;
 }
 
-.hero.is-light {
+.hero.is-light,
+.is-light-bg {
   background: var(--background-secondary);
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
@@ -935,6 +937,13 @@ a:focus {
   padding: 1.25rem 1.75rem;
   margin: 1.5rem 0;
   border: none;
+  overflow-x: auto;
+}
+
+@media screen and (max-width: 768px) {
+  .formula-box {
+    padding: 1rem 0.75rem;
+  }
 }
 
 .formula-box .formula-label {
@@ -1095,12 +1104,16 @@ a:focus {
   .gt-reference-panel {
     flex: none;
     width: 100%;
-    flex-direction: column;
-    align-items: center;
-    padding: 0.75rem;
+    flex-direction: row;
+    padding: 0.5rem;
   }
   .gt-reference-panel img {
-    width: 80%;
+    width: 45%;
+  }
+  .gt-closeup-label {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
   }
 }
 
@@ -1142,6 +1155,25 @@ a:focus {
   cursor: pointer;
   border-right: 1px solid var(--border-color);
   transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+@media screen and (max-width: 768px) {
+  .comparison-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .comparison-controls .control-group {
+    flex-wrap: wrap;
+  }
+  .comparison-controls .btn-group {
+    flex-wrap: wrap;
+  }
+  .comparison-controls .btn-group button {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.75rem;
+  }
 }
 
 .comparison-controls .btn-group button:last-child {
@@ -1413,6 +1445,12 @@ a:focus {
     top: 3.25rem;
     left: 0.5rem;
   }
+}
+
+/* Hide magnifier UI on touch/mobile devices */
+.is-touch-device .magnifier-help-btn,
+.is-touch-device .magnifier-help-popup {
+  display: none !important;
 }
 
 /* ── Magnifier Lens ─────────────────────────────────────────────────────── */

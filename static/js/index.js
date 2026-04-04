@@ -1,5 +1,13 @@
 window.HELP_IMPROVE_VIDEOJS = false;
 
+// ── Touch Device Detection ──────────────────────────────────────────────
+(function() {
+  var isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+  if (isTouch) {
+    document.documentElement.classList.add('is-touch-device');
+  }
+})();
+
 // ── Dark Mode Toggle ────────────────────────────────────────────────────
 (function() {
   var saved = localStorage.getItem('theme');
