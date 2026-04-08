@@ -112,6 +112,10 @@
 [data-theme="dark"] .hero .subtitle {
   color: var(--text-secondary) !important;
 }
+[data-theme="dark"] .subtitle strong,
+[data-theme="dark"] .hero .subtitle strong {
+  color: var(--text-primary) !important;
+}
 
 [data-theme="dark"] .title,
 [data-theme="dark"] .title.is-1,
