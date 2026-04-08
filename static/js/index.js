@@ -851,7 +851,32 @@ function initVideoComparisonSlider() {
   });
 }
 
+// ── Mesh Viewer Pastel Tinting ──────────────────────────────────────────
+function tintModelViewer(viewer, color) {
+  viewer.addEventListener('load', function() {
+    var model = viewer.model;
+    if (!model) return;
+    for (var i = 0; i < model.materials.length; i++) {
+      var mat = model.materials[i];
+      mat.pbrMetallicRoughness.setBaseColorFactor(color);
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+  // Apply pastel tints to mesh viewers: red, green, blue
+  var viewers = document.querySelectorAll('.mesh-viewer-table model-viewer');
+  var pastelColors = [
+    [0.80, 0.65, 0.85, 1.0],  // pastel violet
+    [0.65, 0.85, 0.65, 1.0],  // pastel green
+    [0.65, 0.65, 0.85, 1.0]   // pastel blue
+  ];
+  viewers.forEach(function(viewer, i) {
+    if (i < pastelColors.length) {
+      tintModelViewer(viewer, pastelColors[i]);
+    }
+  });
+
   initQualitativeSlider();
   initNormalFieldSlider();
   initPAMSlider();

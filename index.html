@@ -109,6 +109,7 @@
   <script defer src="static/js/bulma-slider.min.js"></script>
   <script defer src="static/js/magnifier.js"></script>
   <script defer src="static/js/index.js"></script>
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.1.1/model-viewer.min.js"></script>
 
   <!-- Structured Data for Academic Papers -->
   <script type="application/ld+json">
@@ -221,6 +222,24 @@
   </div>
 
   <main id="main-content">
+
+  <!-- YouTube Video Banner -->
+  <section class="video-banner">
+    <div class="video-banner-inner">
+      <iframe
+        src="https://www.youtube.com/embed/rOBs2yyYaJM?autoplay=0&mute=0&loop=1&playlist=rOBs2yyYaJM&rel=0&showinfo=0&modestbranding=1&controls=1"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen>
+      </iframe>
+    </div>
+    <div class="video-banner-scroll-hint">
+      <p>Scroll down for details</p>
+      <i class="fas fa-chevron-down"></i>
+    </div>
+    <div class="video-banner-gradient"></div>
+  </section>
+
   <section class="hero">
     <div class="hero-body">
       <div class="container is-max-desktop">
@@ -262,12 +281,12 @@
             </span>
 
             <span class="link-block">
-              <a href="https://github.com/TODO_REPO" target="_blank"
+              <a href="https://github.com/diego1401/GaussianWrapping" target="_blank"
               class="external-link button is-normal is-rounded is-dark">
               <span class="icon">
                 <i class="fab fa-github"></i>
               </span>
-              <span>Code [Coming Soon]</span>
+              <span>Code</span>
             </a>
           </span>
 
@@ -385,6 +404,52 @@
   </div>
 </section>
 
+<!-- Reconstructed Meshes (Interactive 3D Viewer) -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Reconstructed Meshes</h2>
+    <p class="has-text-centered" style="margin-bottom: 1.5rem; color: var(--text-secondary);">
+      Interactive 3D meshes extracted by Gaussian Wrapping with Primal Adaptive Meshing (PAM), Blender Mesh Decimation and Draco Compression (GLB) for portability. See our <a href="https://github.com/diego1401/GaussianWrapping" target="_blank">Github</a> for a tutorial on extracting regions of interest with PAM. Click and drag to rotate, scroll to zoom.
+    </p>
+    <table class="mesh-viewer-table">
+      <tr>
+        <td>
+          <model-viewer
+            alt="Bicycle mesh"
+            src="static/meshes/bicycle.glb"
+            camera-controls
+            shadow-intensity="1"
+            exposure="0.4"
+            draco-decoder-path="https://www.gstatic.com/draco/versioned/decoders/1.5.6/"
+          ></model-viewer>
+          <div class="mesh-label">Bicycle</div>
+        </td>
+        <td>
+          <model-viewer
+            alt="Lego in Kitchen mesh"
+            src="static/meshes/kitchen.glb"
+            camera-controls
+            shadow-intensity="1"
+            exposure="0.4"
+            draco-decoder-path="https://www.gstatic.com/draco/versioned/decoders/1.5.6/"
+          ></model-viewer>
+          <div class="mesh-label">Lego in Kitchen</div>
+        </td>
+        <td class="hidable">
+          <model-viewer
+            alt="Bonsai mesh"
+            src="static/meshes/bonsai.glb"
+            camera-controls
+            shadow-intensity="1"
+            exposure="0.4"
+            draco-decoder-path="https://www.gstatic.com/draco/versioned/decoders/1.5.6/"
+          ></model-viewer>
+          <div class="mesh-label">Bonsai</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</section>
 
 <!-- Pipeline Overview -->
 <section class="section">
@@ -629,6 +694,7 @@
         <div class="content has-text-centered">
           <p>
             This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
+            The mesh viewer on this page was inspired by <a href="https://nissmar.github.io/projects/ponq/" target="_blank">Nissim's PoNQ project page</a>.
             This website is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
           </p>
         </div>
