@@ -109,7 +109,15 @@
   <script defer src="static/js/bulma-slider.min.js"></script>
   <script defer src="static/js/magnifier.js"></script>
   <script defer src="static/js/index.js"></script>
-  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.1.1/model-viewer.min.js"></script>
+  <script>
+    // Only load model-viewer on non-mobile devices to avoid heavy mesh downloads
+    if (window.innerWidth > 768) {
+      var s = document.createElement('script');
+      s.type = 'module';
+      s.src = 'https://ajax.googleapis.com/ajax/libs/model-viewer/3.1.1/model-viewer.min.js';
+      document.head.appendChild(s);
+    }
+  </script>
 
   <!-- Structured Data for Academic Papers -->
   <script type="application/ld+json">
@@ -140,6 +148,12 @@
   </script>
 </head>
 <body>
+
+  <!-- Mobile-only banner -->
+  <div class="mobile-banner">
+    <span>For the best experience, visit this page on a computer.</span>
+    <button class="mobile-banner-close" aria-label="Dismiss banner">&times;</button>
+  </div>
 
   <!-- Scroll to Top Button -->
   <button class="scroll-to-top" onclick="scrollToTop()" title="Scroll to top" aria-label="Scroll to top">
@@ -409,7 +423,7 @@
 </section>
 
 <!-- Reconstructed Meshes (Interactive 3D Viewer) -->
-<section class="section">
+<section class="section mesh-viewer-section">
   <div class="container is-max-desktop">
     <h2 class="title is-3 has-text-centered">Reconstructed Meshes</h2>
     <p class="has-text-centered" style="margin-bottom: 1.5rem; color: var(--text-secondary);">
@@ -502,7 +516,8 @@
       </div>
     </div>
 
-    <!-- Qualitative comparison: Bicycle and Garden scenes -->
+    <!-- Qualitative comparison: Bicycle and Garden scenes (hidden on mobile) -->
+    <div class="qualitative-comparison-block">
     <h3 class="title is-4 has-text-centered" style="margin-top: 1rem;">Qualitative Comparisons</h3>
     <p class="has-text-centered" style="margin-bottom: 1.5rem; color: var(--text-secondary);">
       Mesh renderings on the Bicycle and Garden scenes (Mip-NeRF 360). Our method recovers significantly finer surface detail and thin structures compared to baselines.
@@ -531,6 +546,7 @@
     <p class="figure-caption">
       Drag the slider to compare. Our method recovers fine surface detail and closes geometric holes (e.g., bicycle spokes) where competing methods erode geometry or fail entirely.
     </p>
+    </div>
 
   </div>
 </section>

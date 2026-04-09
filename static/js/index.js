@@ -1,5 +1,15 @@
 window.HELP_IMPROVE_VIDEOJS = false;
 
+// ── Mobile Banner Dismiss ──────────────────────────────────────────────
+(function() {
+  var btn = document.querySelector('.mobile-banner-close');
+  if (btn) {
+    btn.addEventListener('click', function() {
+      btn.parentElement.style.display = 'none';
+    });
+  }
+})();
+
 // ── Touch Device Detection ──────────────────────────────────────────────
 (function() {
   var isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);

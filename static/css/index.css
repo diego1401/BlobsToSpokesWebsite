@@ -1,3 +1,35 @@
+/* Mobile-only banner */
+.mobile-banner {
+  display: none;
+  background: #dc2626;
+  color: #fff;
+  text-align: center;
+  padding: 0.6rem 2.5rem 0.6rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  position: relative;
+}
+
+.mobile-banner-close {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.25rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .mobile-banner {
+    display: block;
+  }
+}
+
 /* Modern CSS Variables for consistent theming */
 :root {
   --primary-color: #2563eb;
@@ -1702,11 +1734,11 @@ a:focus {
 }
 
 @media screen and (max-width: 768px) {
-  .mesh-viewer-table .hidable {
+  .mesh-viewer-section {
     display: none;
   }
-  .mesh-viewer-table td model-viewer {
-    height: 280px;
+  .qualitative-comparison-block {
+    display: none;
   }
 }
 
