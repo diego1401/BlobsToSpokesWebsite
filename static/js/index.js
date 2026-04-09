@@ -899,6 +899,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
+  // ── Mesh loading overlay ───────────────────────────────────────────
+  (function() {
+    var overlay = document.getElementById('meshLoadingOverlay');
+    if (!overlay || viewers.length === 0) return;
+    var loaded = 0;
+    var total = viewers.length;
+    function onLoaded() {
+      loaded++;
+      if (loaded >= total) {
+        overlay.classList.add('hidden');
+      }
+    }
+    viewers.forEach(function(v) {
+      v.addEventListener('load', onLoaded);
+    });
+    // Fallback: hide overlay after 15s regardless
+    setTimeout(function() {
+      overlay.classList.add('hidden');
+    }, 15000);
+  })();
+
   initQualitativeSlider();
   initNormalFieldSlider();
   initPAMSlider();

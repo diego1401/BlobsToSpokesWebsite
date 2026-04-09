@@ -436,43 +436,56 @@
     <p class="has-text-centered" style="margin-bottom: 1.5rem; color: var(--text-secondary);">
       Interactive 3D meshes extracted by Gaussian Wrapping with Primal Adaptive Meshing (PAM), Blender Mesh Decimation and Draco Compression (GLB) for portability. See our <a href="https://github.com/diego1401/GaussianWrapping" target="_blank">Github</a> for a tutorial on extracting regions of interest with PAM. Click and drag to rotate, scroll to zoom.
     </p>
-    <table class="mesh-viewer-table">
-      <tr>
-        <td>
-          <model-viewer
-            alt="Bicycle mesh"
-            src="static/meshes/bicycle.glb"
-            camera-controls
-            shadow-intensity="1"
-            exposure="0.4"
-            draco-decoder-path="https://www.gstatic.com/draco/versioned/decoders/1.5.6/"
-          ></model-viewer>
-          <div class="mesh-label">Bicycle</div>
-        </td>
-        <td>
-          <model-viewer
-            alt="Lego in Kitchen mesh"
-            src="static/meshes/kitchen.glb"
-            camera-controls
-            shadow-intensity="1"
-            exposure="0.4"
-            draco-decoder-path="https://www.gstatic.com/draco/versioned/decoders/1.5.6/"
-          ></model-viewer>
-          <div class="mesh-label">Lego in Kitchen</div>
-        </td>
-        <td class="hidable">
-          <model-viewer
-            alt="Bonsai mesh"
-            src="static/meshes/bonsai.glb"
-            camera-controls
-            shadow-intensity="1"
-            exposure="0.4"
-            draco-decoder-path="https://www.gstatic.com/draco/versioned/decoders/1.5.6/"
-          ></model-viewer>
-          <div class="mesh-label">Bonsai</div>
-        </td>
-      </tr>
-    </table>
+    <div class="mesh-viewer-wrapper">
+      <!-- Loading overlay -->
+      <div class="mesh-loading-overlay" id="meshLoadingOverlay">
+        <div class="mesh-loading-content">
+          <div class="mesh-loading-spinner"></div>
+          <p class="mesh-loading-text">Loading 3D meshes&hellip;</p>
+          <p class="mesh-loading-tip">
+            Tip: Consider using the 🔍 tool
+          </p>
+        </div>
+      </div>
+
+      <table class="mesh-viewer-table">
+        <tr>
+          <td>
+            <model-viewer
+              alt="Bicycle mesh"
+              src="static/meshes/bicycle.glb"
+              camera-controls
+              shadow-intensity="1"
+              exposure="0.4"
+              draco-decoder-path="https://www.gstatic.com/draco/versioned/decoders/1.5.6/"
+            ></model-viewer>
+            <div class="mesh-label">Bicycle</div>
+          </td>
+          <td>
+            <model-viewer
+              alt="Lego in Kitchen mesh"
+              src="static/meshes/kitchen.glb"
+              camera-controls
+              shadow-intensity="1"
+              exposure="0.4"
+              draco-decoder-path="https://www.gstatic.com/draco/versioned/decoders/1.5.6/"
+            ></model-viewer>
+            <div class="mesh-label">Lego in Kitchen</div>
+          </td>
+          <td class="hidable">
+            <model-viewer
+              alt="Bonsai mesh"
+              src="static/meshes/bonsai.glb"
+              camera-controls
+              shadow-intensity="1"
+              exposure="0.4"
+              draco-decoder-path="https://www.gstatic.com/draco/versioned/decoders/1.5.6/"
+            ></model-viewer>
+            <div class="mesh-label">Bonsai</div>
+          </td>
+        </tr>
+      </table>
+    </div>
   </div>
 </section>
 
