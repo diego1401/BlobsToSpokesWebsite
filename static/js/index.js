@@ -549,10 +549,10 @@ function initVideoComparisonSlider() {
   var timelineHandle = timeline.querySelector('.video-timeline-handle');
 
   var scenes = [
-    { name: 'Bicycle', left: 'static/videos/renders/bicycle_milo.mp4',  right: 'static/videos/renders/bicycle_Ours.mp4',  method: 'MILo' },
-    { name: 'Garden',  left: 'static/videos/renders/garden_milo.mp4',   right: 'static/videos/renders/garden_Ours.mp4',   method: 'MILo' },
-    { name: 'Truck',   left: 'static/videos/renders/Truck_PGSR.mp4',    right: 'static/videos/renders/Truck_Ours.mp4',    method: 'PGSR' },
-    { name: 'Barn',    left: 'static/videos/renders/Barn_GGGS.mp4',     right: 'static/videos/renders/Barn_Ours.mp4',    method: 'GGGS' }
+    { name: 'Bicycle', left: 'static/videos/renders/bicycle_milo',  right: 'static/videos/renders/bicycle_Ours',  method: 'MILo' },
+    { name: 'Garden',  left: 'static/videos/renders/garden_milo',   right: 'static/videos/renders/garden_Ours',   method: 'MILo' },
+    { name: 'Truck',   left: 'static/videos/renders/Truck_PGSR',    right: 'static/videos/renders/Truck_Ours',    method: 'PGSR' },
+    { name: 'Barn',    left: 'static/videos/renders/Barn_GGGS',     right: 'static/videos/renders/Barn_Ours',    method: 'GGGS' }
   ];
 
   var currentScene = scenes[0];
@@ -769,8 +769,20 @@ function initVideoComparisonSlider() {
 
     var token = ++loadToken;
 
-    videoLeft.src = scene.left;
-    videoRight.src = scene.right;
+    function setSources(video, basePath) {
+      video.removeAttribute('src');
+      while (video.firstChild) video.removeChild(video.firstChild);
+      var webm = document.createElement('source');
+      webm.src = basePath + '.webm';
+      webm.type = 'video/webm';
+      var mp4 = document.createElement('source');
+      mp4.src = basePath + '.mp4';
+      mp4.type = 'video/mp4';
+      video.appendChild(webm);
+      video.appendChild(mp4);
+    }
+    setSources(videoLeft, scene.left);
+    setSources(videoRight, scene.right);
     labelLeft.textContent = scene.method;
     labelRight.textContent = 'Ours';
     setPosition(50);
