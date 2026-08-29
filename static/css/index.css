@@ -385,6 +385,12 @@ body {
     margin-bottom: 1.5rem;
 }
 
+/* The link buttons on this page are bare inline-block spans with no wrapper,
+   so the venue needs a block-level row of its own to sit above them. */
+.publication-venue-row {
+    margin-bottom: 1.25rem;
+}
+
 .publication-venue {
     color: var(--text-secondary);
     width: fit-content;
